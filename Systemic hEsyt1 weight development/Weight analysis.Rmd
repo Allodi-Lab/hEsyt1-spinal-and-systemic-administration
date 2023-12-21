@@ -1,0 +1,109 @@
+---
+title: "Weight analysis"
+output:
+  pdf_document: default
+  html_document: default
+date: "2023-10-21"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+Loading data
+
+```{r}
+library(pacman)
+p_load(tidyverse, ggsignif, multcomp, broom, emmeans, DescTools, readxl)
+setwd("~/Documents/Systemic ESYT1 project locomotion, behavior, survival, anatomical data/Weight data/") 
+
+df <- read_excel("Weight spreadsheet.xlsx")
+df2 <- df
+
+
+```
+
+
+Assign genotypes
+```{r}
+df2$Genotype <- 0
+
+
+df2$Genotype <- ifelse(df2$mouse_number==702, 'SOD1', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==730, 'SOD1', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==734, 'SOD1', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==738, 'SOD1', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==625, 'SOD1', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==627, 'SOD1', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==615, 'SOD1', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==788, 'SOD1', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==700, 'WT', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==692, 'WT', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==706, 'WT', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==708, 'WT', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==553, 'WT', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==555, 'WT', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==694, 'En1cre', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==698, 'En1cre', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==696, 'En1cre', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==561, 'En1cre', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==736, 'SOD1En1cre', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==589, 'SOD1En1cre', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==603, 'SOD1En1cre', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==607, 'SOD1En1cre', df2$Genotype)
+
+```
+
+Removing En1 and P175 because only few animals got this far
+```{r}
+df2<-df2[!(df2$Genotype=='En1cre'),] 
+
+df2<-df2[!(df2$Assigned_PD==175),] 
+df2<-df2[!(df2$Assigned_PD==175),] 
+```
+
+
+Reduce dataset to the 6 SOD1 that were injected with GFP
+
+```{r}
+df2<-df2[!(df2$mouse_number=='625' | df2$mouse_number=='627'),] 
+```
+
+
+Plots
+
+```{r}
+
+#color_palette inspired colorpalette
+color_palette = c("#5B1A18","#FD6467",  "#F1BB7B")
+df2$Genotype <- factor(df2$Genotype, levels = c("WT", "En1cre", "SOD1", "SOD1En1cre"))
+```
+
+Weight Longitudinal plot
+```{r}
+
+ggplot(df2, aes(x=Assigned_PD, y= Weight, color=Genotype)) +
+  geom_point(stat = "summary",fun.data=mean_se) +
+  geom_errorbar(stat="summary", fun.data=mean_se, width = 0.5) +
+    scale_color_manual(values = color_palette)+ 
+  geom_line(stat = "summary",fun.data=mean_se)+
+    theme(panel.background = element_rect(fill = "white"), text = element_text(size=13), axis.line = element_line(color="black"), legend.key = element_rect(colour = "transparent", fill = "white")) +
+  xlab("Postnatal day") + ylab("Weight")
+
+```
+
+2 way anova
+
+```{r}
+#Ordering Genotype variables by manipulation so SOD1 becomes comparison group
+df2$Genotype <- factor(df2$Genotype, levels = c("SOD1", "WT", "En1cre", "SOD1En1cre"))
+
+df2$Assigned_PD <- as.factor(df2$Assigned_PD)
+
+anova_weight_2way <- aov(Weight~ Genotype*Assigned_PD, data = df2)
+summary(anova_weight_2way)
+
+emmeans(anova_weight_2way,specs = trt.vs.ctrl~ Genotype|Assigned_PD)
+
+```
