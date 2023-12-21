@@ -1,0 +1,197 @@
+---
+title: "WS analysis"
+output:
+  word_document: default
+  html_document: default
+date: '2023-03-14'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(pacman)
+p_load(tidyverse, ggsignif, multcomp, broom, emmeans, DescTools)
+setwd("~/Documents/Systemic ESYT1 project locomotion, behavior, survival, anatomical data/Locomotion analysis cleaned/Weight support analysis/") 
+df<- read.csv("WS_mean_new_method.csv", header=T)
+colnames(df)[11]  <- "name"
+
+#reverse so closer to back top is 1 and closer to front paw is 0
+
+df$tb_ratio_mean_reverse <- df$tb_ratio_mean
+df$tb_ratio_mean <- df$tb_ratio_mean_reverse-1
+df$tb_ratio_mean<- abs(df$tb_ratio_mean)
+
+```
+
+Add timepoint
+```{r}
+df2 <- df
+df2$time_point <- 0
+df2$time_point <- ifelse(grepl('p49_', df2$name), 49, df2$time_point)
+df2$time_point <- ifelse(grepl('p56_', df2$name), 56, df2$time_point)
+df2$time_point <- ifelse(grepl('p63_', df2$name), 63, df2$time_point)
+df2$time_point <- ifelse(grepl('p70_', df2$name), 70, df2$time_point)
+df2$time_point <- ifelse(grepl('p77_', df2$name), 77, df2$time_point)
+df2$time_point <- ifelse(grepl('p84_', df2$name), 84, df2$time_point)
+df2$time_point <- ifelse(grepl('p91_', df2$name), 91, df2$time_point)
+df2$time_point <- ifelse(grepl('p98_', df2$name), 98, df2$time_point)
+df2$time_point <- ifelse(grepl('p105_', df2$name), 105, df2$time_point)
+df2$time_point <- ifelse(grepl('p112_', df2$name), 112, df2$time_point)
+
+```
+
+Add mousenumber
+```{r}
+
+df2$mouse_number <- 0
+
+#SOD1En1cre
+df2$mouse_number <- ifelse(grepl('736_', df$name), '736', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('589_', df$name), '589', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('603_', df$name), '603', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('607_', df$name), '607', df2$mouse_number)
+#En1re
+df2$mouse_number <- ifelse(grepl('561_', df$name), '561', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('694_', df$name), '694', df2$mouse_number) 
+df2$mouse_number <- ifelse(grepl('696_', df$name), '696', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('698_', df$name), '698', df2$mouse_number)
+#SOD1
+df2$mouse_number <- ifelse(grepl('730_', df$name), '730', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('734_', df$name), '734', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('738_', df$name), '738', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('702_', df$name), '702', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('625_', df$name), '625', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('627_', df$name), '627', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('615_', df$name), '615', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('788_', df$name), '788', df2$mouse_number)
+#WT
+df2$mouse_number <- ifelse(grepl('692_', df$name), '692', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('700_', df$name), '700', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('706_', df$name), '706', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('708_', df$name), '708', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('553_', df$name), '553', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('555_', df$name), '555', df2$mouse_number)
+```
+
+
+Assign genotypes
+```{r}
+df2$Genotype <- 0
+
+
+df2$Genotype <- ifelse(df2$mouse_number==702, 'SOD1', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==730, 'SOD1', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==734, 'SOD1', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==738, 'SOD1', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==625, 'SOD1', df2$Genotype) 
+df2$Genotype <- ifelse(df2$mouse_number==627, 'SOD1', df2$Genotype) 
+df2$Genotype <- ifelse(df2$mouse_number==615, 'SOD1', df2$Genotype) 
+df2$Genotype <- ifelse(df2$mouse_number==788, 'SOD1', df2$Genotype) 
+df2$Genotype <- ifelse(df2$mouse_number==700, 'WT', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==692, 'WT', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==706, 'WT', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==708, 'WT', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==553, 'WT', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==555, 'WT', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==694, 'En1cre', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==698, 'En1cre', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==696, 'En1cre', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==561, 'En1cre', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==736, 'SOD1En1cre', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==589, 'SOD1En1cre', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==603, 'SOD1En1cre', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==607, 'SOD1En1cre', df2$Genotype)
+
+```
+
+Removal of mouse 625 and 627 from dataset as they wrongly injected.
+
+```{r}
+df2<-df2[!(df2$mouse_number==625 | df2$mouse_number==627),] 
+```
+
+
+```{r}
+p49 <- newdata <- subset(df2, time_point==49)
+p56 <- newdata <- subset(df2, time_point==56)
+p63 <- newdata <- subset(df2, time_point==63)
+p70 <- newdata <- subset(df2, time_point==70)
+p77 <- newdata <- subset(df2, time_point==77)
+p84 <- newdata <- subset(df2, time_point==84)
+p91 <- newdata <- subset(df2, time_point==91)
+p98 <- newdata <- subset(df2, time_point==98)
+p105 <- newdata <- subset(df2, time_point==105)
+p112 <- newdata <- subset(df2, time_point==112)
+```
+
+
+Compute mean for each mouse for each timepoint
+
+```{r}
+df_means_mouse_by_Genotype <- df2 %>%
+	group_by(mouse_number, Genotype, time_point) %>%
+  summarise(tb_ratio_mean = mean(tb_ratio_mean)) %>% 
+  arrange(Genotype)
+```
+
+Analysis of p112
+
+```{r}
+p112 <- subset(df_means_mouse_by_Genotype, time_point==112) #Mean values
+p112_all <- subset(df2, time_point==112) #Video triplicates
+```
+
+
+p112 Analysis using triplicates
+```{r}
+
+p112_all$Genotype <- as.factor(p112_all$Genotype)
+p112_all$Genotype <- factor(p112_all$Genotype, levels = c( "SOD1","SOD1En1cre", "WT", "En1cre"))
+
+anova_tb_ratio <- aov(p112_all$tb_ratio_mean ~ Genotype, data = p112_all)
+summary(anova_tb_ratio)
+
+DunnettTest(x=p112_all$tb_ratio_mean, g=p112_all$Genotype)
+
+stars <- function(p) {
+  case_when(
+    p <= 0.001 ~ "***",
+    p <= 0.01  ~ "**",
+    p <= 0.05  ~ "*",
+    TRUE       ~ "ns"
+  )
+}
+
+#Re-ordering so the experimental groups appear in order of control level
+p112$Genotype <- factor(p112$Genotype, levels = c("WT", "En1cre", "SOD1", "SOD1En1cre"))
+p112_all$Genotype <- factor(p112_all$Genotype, levels = c("WT", "En1cre", "SOD1", "SOD1En1cre"))
+
+#color_palette inspired colorpalette
+color_palette = c("#5B1A18","#FD6467",  "#F1BB7B")
+
+Dunnet<- glht(anova_tb_ratio, mcp(Genotype = "Dunnet")) %>%tidy() %>% 
+  mutate(contrast = str_split(contrast, " - "),
+         stars    = stars(adj.p.value))
+
+ggplot(data= p112_all, aes(x=Genotype, y=tb_ratio_mean)) +
+  geom_bar(stat = "summary",fun=mean, aes(color = Genotype,fill=Genotype), alpha = 0.01, size=1) +
+  geom_errorbar(stat="summary", fun.data=mean_se, width = 0.5, position = "dodge")+
+  theme(panel.background = element_rect(fill = "white"), axis.line = element_line(color="black"))+
+  scale_color_manual(values=color_palette)+
+  scale_fill_manual(values=color_palette)+
+  theme(text = element_text(family = "Arial"))+
+  ylab("Weight support capability")+
+    geom_jitter(data=p112, position = position_jitter(width = .2), size=2.2)+
+  geom_jitter(data=p112_all,position = position_jitter(width = .2),alpha=0.3)+
+    theme(axis.title.x=element_blank(), text = element_text(size=15),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())+
+      ggsignif::geom_signif(family = "Arial",
+    comparisons = Dunnet$contrast,
+    annotations = Dunnet$stars,
+    y_position = c(0.8,0.70,0.75)
+  )
+
+```

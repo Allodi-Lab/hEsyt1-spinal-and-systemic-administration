@@ -1,0 +1,300 @@
+---
+title: "Lateral analysis"
+output:
+  word_document: default
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Loading data
+
+```{r}
+library(pacman)
+p_load(tidyverse, ggsignif, multcomp, broom, emmeans, DescTools)
+setwd("~/Documents/Systemic ESYT1 project locomotion, behavior, survival, anatomical data/Locomotion analysis cleaned/") 
+df<- read.table("statistics.csv", sep=",", header=T)
+
+
+```
+Assign time point
+
+```{r}
+df2 <- df
+df2$time_point <- 0
+df2$time_point <- ifelse(grepl('p49_', df2$name), 49, df2$time_point)
+df2$time_point <- ifelse(grepl('p56_', df2$name), 56, df2$time_point)
+df2$time_point <- ifelse(grepl('p63_', df2$name), 63, df2$time_point)
+df2$time_point <- ifelse(grepl('p70_', df2$name), 70, df2$time_point)
+df2$time_point <- ifelse(grepl('p77_', df2$name), 77, df2$time_point)
+df2$time_point <- ifelse(grepl('p84_', df2$name), 84, df2$time_point)
+df2$time_point <- ifelse(grepl('p91_', df2$name), 91, df2$time_point)
+df2$time_point <- ifelse(grepl('p98_', df2$name), 98, df2$time_point)
+df2$time_point <- ifelse(grepl('p105_', df2$name), 105, df2$time_point)
+df2$time_point <- ifelse(grepl('p112_', df2$name), 112, df2$time_point)
+
+```
+
+
+
+Give each mouse own number
+```{r}
+
+df2$mouse_number <- 0
+
+#SOD1En1cre
+df2$mouse_number <- ifelse(grepl('736_', df$name), '736', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('589_', df$name), '589', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('603_', df$name), '603', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('607_', df$name), '607', df2$mouse_number)
+#En1re
+df2$mouse_number <- ifelse(grepl('561_', df$name), '561', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('694_', df$name), '694', df2$mouse_number) 
+df2$mouse_number <- ifelse(grepl('696_', df$name), '696', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('698_', df$name), '698', df2$mouse_number)
+#SOD1
+df2$mouse_number <- ifelse(grepl('730_', df$name), '730', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('734_', df$name), '734', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('738_', df$name), '738', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('702_', df$name), '702', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('627_', df$name), '627', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('625_', df$name), '625', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('615_', df$name), '615', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('788_', df$name), '788', df2$mouse_number)
+#WT
+df2$mouse_number <- ifelse(grepl('692_', df$name), '692', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('700_', df$name), '700', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('706_', df$name), '706', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('708_', df$name), '708', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('553_', df$name), '553', df2$mouse_number)
+df2$mouse_number <- ifelse(grepl('555_', df$name), '555', df2$mouse_number)
+```
+
+Assign genotypes
+```{r}
+df2$Genotype <- 0
+
+
+df2$Genotype <- ifelse(df2$mouse_number==702, 'SOD1', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==730, 'SOD1', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==734, 'SOD1', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==738, 'SOD1', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==625, 'SOD1', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==627, 'SOD1', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==615, 'SOD1', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==788, 'SOD1', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==700, 'WT', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==692, 'WT', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==706, 'WT', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==708, 'WT', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==553, 'WT', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==555, 'WT', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==694, 'En1cre', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==698, 'En1cre', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==696, 'En1cre', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==561, 'En1cre', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==736, 'SOD1En1cre', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==589, 'SOD1En1cre', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==603, 'SOD1En1cre', df2$Genotype)
+df2$Genotype <- ifelse(df2$mouse_number==607, 'SOD1En1cre', df2$Genotype)
+
+```
+
+
+Removal of mouse 625 and 627 from dataset as they wrongly injected.
+
+```{r}
+df2<-df2[!(df2$mouse_number=='625' | df2$mouse_number=='627'),] 
+```
+
+Compute mean for each mouse for each timepoint
+
+```{r}
+df_means_mouse_by_Genotype <- df2 %>%
+	group_by(mouse_number, Genotype, time_point) %>%
+  summarise(hip_ang = mean(hip_ang), knee_ang = mean(knee_ang), ankle_ang = mean(ankle_ang), foot_ang = mean(foot_ang)) %>% 
+  arrange(Genotype)
+```
+
+Create dataset with data from onset of locomotor phenotype
+
+Set color palette for plots
+
+For the plots, colors from the palette 'GrandBudapest1' from the 'wesanderson' package (Karthik Ram and Hadley Wickham (2018). wesanderson: A Wes Anderson Palette Generator. R package
+  version 0.3.6. https://CRAN.R-project.org/package=wesanderson) were used, but colors re-ordered so the darkest color was applied to the WT mice
+```{r}
+#color_palette inspired colorpalette
+color_palette = c("#5B1A18","#FD6467",  "#F1BB7B")
+
+```
+
+Preparing the ggsignif function to use Dunnet's p-values for bar plots
+```{r}
+
+stars <- function(p) {
+  case_when(
+    p <= 0.001 ~ "***",
+    p <= 0.01  ~ "**",
+    p <= 0.05  ~ "*",
+    TRUE       ~ "ns"
+  )
+}
+
+
+```
+
+Analysis of p112
+
+```{r}
+p112 <- subset(df_means_mouse_by_Genotype, time_point==112) #Mean values
+p112_all <- subset(df2, time_point==112) #Video triplicates
+```
+
+one-way anova at p112
+ 
+```{r}
+
+#Ordering Genotype variables by manipulation so SOD1 becomes 'control' in Dunnet post-hoc tests
+p112_all$Genotype <- factor(p112_all$Genotype, levels = c("SOD1","SOD1En1cre", "WT", "En1cre"))
+
+#foot angle
+anova_foot_1way <- aov(foot_ang ~ Genotype, data = p112_all)
+summary(anova_foot_1way)
+
+DunnettTest(x=p112_all$foot_ang, g=p112_all$Genotype)
+
+#ankle
+anova_ankle_1way <- aov(ankle_ang ~ Genotype, data = p112_all)
+summary(anova_ankle_1way)
+
+DunnettTest(x=p112_all$ankle_ang, g=p112_all$Genotype)
+
+#knee
+anova_knee_1way <- aov(knee_ang ~ Genotype, data = p112_all)
+summary(anova_knee_1way)
+
+DunnettTest(x=p112_all$knee_ang, g=p112_all$Genotype)
+
+#hip
+anova_hip_1way <- aov(hip_ang ~ Genotype, data = p112_all)
+summary(anova_hip_1way)
+
+DunnettTest(x=p112_all$hip_ang, g=p112_all$Genotype)
+
+
+summary(anova_hip_1way)
+```
+
+
+
+Bar plots p112_all
+
+```{r}
+
+
+#Re-ordering so the experimental groups appear in order of control level
+p112$Genotype <- factor(p112$Genotype, levels = c("WT", "En1cre", "SOD1", "SOD1En1cre"))
+p112_all$Genotype <- factor(p112_all$Genotype, levels = c("WT", "En1cre", "SOD1", "SOD1En1cre"))
+
+
+#foot
+Dunnet<- glht(anova_foot_1way, mcp(Genotype = "Dunnet")) %>%tidy() %>% 
+  mutate(contrast = str_split(contrast, " - "),
+         stars    = stars(adj.p.value))
+
+ggplot(data= p112_all, aes(x=Genotype, y=foot_ang)) +
+  geom_bar(stat = "summary",fun=mean, aes(color = Genotype,fill=Genotype), alpha = 0.01, size=1) +
+  geom_errorbar(stat="summary", fun.data=mean_se, width = 0.5, position = "dodge")+
+  theme(panel.background = element_rect(fill = "white"), axis.line = element_line(color="black"))+
+
+  scale_color_manual(values=color_palette)+
+  scale_fill_manual(values=color_palette)+
+  ylab("Foot angle")+
+    geom_jitter(data=p112, position = position_jitter(width = .2), size=2.2)+
+  geom_jitter(data=p112_all,position = position_jitter(width = .2),alpha=0.3)+
+    theme(axis.title.x=element_blank(), text = element_text(size=15),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())+
+      ggsignif::geom_signif(
+    comparisons = Dunnet$contrast,
+    annotations = Dunnet$stars,
+    y_position = c(70,62,66)
+  )
+
+#ankle
+Dunnet<- glht(anova_ankle_1way, mcp(Genotype = "Dunnet")) %>%tidy() %>% 
+  mutate(contrast = str_split(contrast, " - "),
+         stars    = stars(adj.p.value))
+
+ggplot(data= p112_all, aes(x=Genotype, y=ankle_ang)) +
+  geom_bar(stat = "summary",fun=mean, aes(color = Genotype,fill=Genotype), alpha = 0.01, size=1) +
+  geom_errorbar(stat="summary", fun.data=mean_se, width = 0.5, position = "dodge")+
+  theme(panel.background = element_rect(fill = "white"), axis.line = element_line(color="black"))+ 
+
+  scale_color_manual(values=color_palette)+
+  scale_fill_manual(values=color_palette)+
+  ylab("Ankle angle")+
+    geom_jitter(data=p112, position = position_jitter(width = .2), size=2.2)+
+  geom_jitter(data=p112_all,position = position_jitter(width = .2),alpha=0.3)+
+    theme(axis.title.x=element_blank(),  text = element_text(size=15),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())+
+      ggsignif::geom_signif(
+    comparisons = Dunnet$contrast,
+    annotations = Dunnet$stars,
+    y_position = c(47,41,44)
+  )
+
+#knee
+Dunnet<- glht(anova_knee_1way, mcp(Genotype = "Dunnet")) %>%tidy() %>% 
+  mutate(contrast = str_split(contrast, " - "),
+         stars    = stars(adj.p.value))
+
+ggplot(data= p112_all, aes(x=Genotype, y=knee_ang)) +
+  geom_bar(stat = "summary",fun=mean, aes(color = Genotype,fill=Genotype), alpha = 0.01, size=1) +
+  geom_errorbar(stat="summary", fun.data=mean_se, width = 0.5, position = "dodge")+
+  theme(panel.background = element_rect(fill = "white"), axis.line = element_line(color="black"))+ 
+
+  scale_color_manual(values=color_palette)+
+  scale_fill_manual(values=color_palette)+
+  ylab("Knee angle")+
+    geom_jitter(data=p112, position = position_jitter(width = .2), size=2.2)+
+  geom_jitter(data=p112_all,position = position_jitter(width = .2),alpha=0.3)+
+    theme(axis.title.x=element_blank(),  text = element_text(size=15),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())+
+      ggsignif::geom_signif(
+    comparisons = Dunnet$contrast,
+    annotations = Dunnet$stars,
+    y_position = c(23,20,21.5)
+  )
+
+#hip
+Dunnet<- glht(anova_hip_1way, mcp(Genotype = "Dunnet")) %>%tidy() %>% 
+  mutate(contrast = str_split(contrast, " - "),
+         stars    = stars(adj.p.value))
+
+ggplot(data= p112_all, aes(x=Genotype, y=hip_ang)) +
+  geom_bar(stat = "summary",fun=mean, aes(color = Genotype,fill=Genotype), alpha = 0.01, size=1) +
+  geom_errorbar(stat="summary", fun.data=mean_se, width = 0.5, position = "dodge")+
+  theme(panel.background = element_rect(fill = "white"), axis.line = element_line(color="black"))+
+
+  scale_color_manual(values=color_palette)+
+  scale_fill_manual(values=color_palette)+
+  ylab("Hip angle")+
+    geom_jitter(data=p112, position = position_jitter(width = .2), size=2.2)+
+  geom_jitter(data=p112_all,position = position_jitter(width = .2),alpha=0.3)+
+    theme(axis.title.x=element_blank(),  text = element_text(size=15),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())+
+      ggsignif::geom_signif(
+    comparisons = Dunnet$contrast,
+    annotations = Dunnet$stars,
+    y_position = c(60,50,55)
+  )
+
+
+```

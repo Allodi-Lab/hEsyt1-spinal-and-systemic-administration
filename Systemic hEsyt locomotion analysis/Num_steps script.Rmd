@@ -1,0 +1,43 @@
+---
+title: "Untitled"
+output: html_document
+date: '2023-03-29'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(pacman)
+p_load(tidyverse, ggsignif,multcomp, broom, emmeans, DescTools)
+setwd("~/Documents/Systemic ESYT1 project locomotion, behavior, survival, anatomical data/Locomotion analysis cleaned/Weight support analysis copy cleaned/") 
+df<- read.table("speedProfile_final.csv", sep="\t", header=T)
+
+df_select <- dplyr::select(df, Name, Num_steps)
+colnames(df_select)[1] <- "filename"
+
+```
+
+
+```{r}
+df2 <- df_select
+df2$time_point <- 0
+df2$time_point <- ifelse(grepl('p49_', df2$filename), 49, df2$time_point)
+df2$time_point <- ifelse(grepl('p56_', df2$filename), 56, df2$time_point)
+df2$time_point <- ifelse(grepl('p63_', df2$filename), 63, df2$time_point)
+df2$time_point <- ifelse(grepl('p70_', df2$filename), 70, df2$time_point)
+df2$time_point <- ifelse(grepl('p77_', df2$filename), 77, df2$time_point)
+df2$time_point <- ifelse(grepl('p84_', df2$filename), 84, df2$time_point)
+df2$time_point <- ifelse(grepl('p91_', df2$filename), 91, df2$time_point)
+df2$time_point <- ifelse(grepl('p98_', df2$filename), 98, df2$time_point)
+df2$time_point <- ifelse(grepl('p105_', df2$filename), 105, df2$time_point)
+df2$time_point <- ifelse(grepl('p112_', df2$filename), 112, df2$time_point)
+
+
+df2$filename <- sub("_SIDEVIEW", "", df2$filename)
+df2$filename <- sub("SIDEVIEW_", "", df2$filename)
+ 
+setwd("~/Documents/Systemic ESYT1 project locomotion, behavior, survival, anatomical data/Locomotion analysis cleaned/Weight support analysis copy cleaned/") 
+write_csv(df2, "num_steps_new.csv")
+```
