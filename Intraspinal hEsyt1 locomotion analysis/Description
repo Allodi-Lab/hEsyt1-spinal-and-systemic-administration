@@ -1,6 +1,6 @@
 Locomotion analysis for intraspinal injection of hEsyt1
 
-#Lateral cleaned.Rmd
+#Lateral analysis.Rmd
 The lateral .Rmd file holds analysis for locomotion kinematics, with the main variables of interest being hip_ang,	knee_ang,	ankle_ang, and	foot_ang, reflecting the angle for the hip, knee, ankle and foot joints, respectively.
 For each video the mouse number and timepoint is parsed. From this information, genotype is assigned. The code contains information on which mouse numnber belongs to which genotype group.
 
@@ -9,7 +9,7 @@ mouse 1, 7 and 80 were removed from dataset as they were injected at different t
 In the script, angles for the different joints are compared across wildtype, en1cre, SOD1, and SOD1en1cre animals using one-way ANOVA at postnatalday 112.
 
 
-#Ventral analysis cleaned.Rmd
+#Ventral analysis.Rmd
 The Ventral analysis cleaned.Rmd fileholds analysis for gait, with the main variables being Avg.Speed,	PeakAcc., MeanCadence and MeanStride, reflecting speed, acceleration, step frequency and stride length, respectively. Mean cadence and stride  are calculated based on averaging cadence for each of the 4 legs of the mouse, and likewise for stride.
 For each video the mouse number is parsed. From this information, genotype is assigned. The code contains information on which mouse numnber belongs to which genotype group. For time, most of the data was analyzed in DeepLabCut without labelling the videos accoridng to which postnatal day they were filmed. for this reason the data was analyzed in batches according to which postnatal day they are from (e.g. data from postnatal day 49 kept in one file, data from postnatalday 56 kept in another. For increasing the N later in the experiment, these files were lablled according to their postnatal day, and parsed in a similar way to the lateral kinematics analysis.
 
@@ -18,7 +18,7 @@ mouse 1, 7 and 80 were removed from dataset as they were injected at different t
 In the script, speed, acceleration, cadence and stride are compared across wildtype, en1cre, SOD1, and SOD1en1cre animals using one-way ANOVA at postnatalday 112, longitudinal analysis across timepoints using two-way ANOVA, and one-way ANOVA at onset of locomotor phenotype.
 
 
-#Weight support algorithm.ipynp and WS_Analysis cleaned.Rmd
+#Weight support algorithm.ipynp and WS_Analysis.Rmd
 The Weight support algorithm.ipynp document holds the analysis pipeline for calculating the weight support measure, as described in the paper, based on x and y coordinates from locomotion videos analyzed in DeepLabcut. In the paper the equation is written up as where a higher pixel y-value reflects a point closer to the top of a video frame. As the videos are considered as matrices, a higher y-value reflects a vlue closer to the bottom of the frame, thus the equation is inverted in the script. Thus a higher tb_ratio value indicates the mouse keeps its tailbase closer to the floor, which for most people is counter-intuitive. In order to make the statistical analysis intuitive, the mean tailbase ratio is inverted in the first lines of the WS_analysis.Rmd script, which subsequently uses the video name to parse mouse, timepoint and genotype and compare genotype performance in mean tailbase height at p112 using ANOVA
 To use the .ipynb document, the step count from ventral videos must be combined with the files holding the x and y coordinates for the videos. These values are extracted using the Num_steps script.Rmd. The resulting file produced by that script can be used in the .ipymb script.
 #WS analysis cleaned.Rmd
