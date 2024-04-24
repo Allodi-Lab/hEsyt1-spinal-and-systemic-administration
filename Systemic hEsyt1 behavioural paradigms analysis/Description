@@ -1,1 +1,44 @@
 This folder contains analysis of behavior in Open Field Test, Novel Object Recognition, Elevated Plus Maze, and 3 Chamber Test
+
+For all tests mentioned below, mice were compared between genotypes using ANOVA.
+#OFT analysis.Rmd
+
+The OFT was conducted to investigate potential changes in exploration and general activity.
+Total distance traveled (cm) was used as a measure of general activity (variable "Distance moved cm"). Rodents exhibit an innate propensity to avoid large, open, brightly lit, and unknown
+environments, and tend to exhibit thigmotaxis (i.e., wall-hugging behavior). Thus, an index of
+thigmotaxis (wall-hugging) was used as a measure of exploratory behavior, calculated as:
+Time spent in periphery/Total time ∙ 100
+where a value over 50 indicates a preference for staying in the periphery of the arena.
+Moreover, time in center ws also included as a measure of this.
+"In zone periphery cumulative s" reflect time spent in periphery, "In zone Center cumulative s" reflect time spent in center, and adding them together reflect total time in the paradigm.
+The variable "ID" is used to divide mice into their respective genotypes
+
+#NOR analysis.Rmd
+The NOR test was conducted to assess potential alterations in memory. Based on time in the
+contact zones with the familiar and novel object during the novelty phase of the paradigm, a
+Novelty Preference Index was computed as:
+(Time spent with novel object/(Time spent with novel object + time spent with familiar object)) ∙ 100
+where a value over 50 reflects more time spent with the novel object, thus a greater degree of
+recognition of the familiar object and hence memory. One animal (mouse 788) from the
+SOD1G93A group was excluded as it did not interact with the objects, and thus a Novelty
+Preference Index could not be calculated.
+
+The main variables are ID, which is used to divide mice into their respective genotypes for comparison, as well as condition (habituation phase of the paradigm vs novelty phase, where NovelLFT indicates the novel object was placed in the left ocntact zone, and NovelRGHT indicating the novel object was placed in the right contact zone.
+The variables "In zone ContactZone_left cumulative s" and "In zone ContactZone_right  cumulative s" are the variables of main interest, indicating how much time the mouse spend in the respective contact zones. The script calculates time in novel vs familiar object zone based on these variables as well as the aforementioned 'Condition'
+
+#EPM analysis.Rmd
+The EPM was used to assess anxiety levels. As a measure of anxiety behavior, the percentage of arm entries into the open arms of the EPM out of total arm entries was used, calculated as:
+(Entries in open arms/(Entries in open arms + entries in closed arms)) ∙ 100
+where a larger value indicates more entries in open arms and thus lower anxiety levels.
+
+The main variables are ID, which is used to divide mice into their respective genotypes for comparison, as well as variables indicating entry into the respective open or closed arms: "In zone Open_arm1 frequency", "In zone Open_arm2 frequency", "In zone Closed_arm1  frequency", "In zone Closed_arm2  frequency". In the script, entries in open and closed arms are added together sperately, to provide a number for all open arm entries, and all closed arm entries.
+
+#3CT analysis.Rmd
+
+The 3CT was employed to investigate  interest in social novelty. A measure of interest in social novelty (Social Novelty Preference Index) was
+calculated as:
+(Time spent in novelty chamber - time spent in social chamber)/(Time spent in novelty chamber + time spent in social chamber)
+where values over 0 indicate a  social novelty preference, 0 indicates no preference, while values under 0 indicate preference for the familiar animal.
+
+The main variables are ID, which is used to divide mice into their respective genotypes for comparison, as well as condition (Habituation, social condition, or novelty condition). The 'Novel' conditions are what is used for calculating social novelty preference index.
+"In zone NoveltyZone cumulative s" reflect time spent in the social novelty chamber while "In zone SocialZone cumulative s" reflect time spent in familiar social chamber.
