@@ -1,1 +1,4 @@
 Analysis of spread of systemic mCherry virus
+
+The script analyses mCherry expression upon systemic administration of an AAV-php.eb viral vector targeting Engrail positive neurons in the CNS. 
+The script takes the number of neurons positive for mCherry (positive_N) and summarizes total hemicord number of positive neurons across 2-3 pictures taken per hemicord slice (Picture), summarizing number of mCherry positive neurons per each left / right hemicord (left_right) for each slice (Slice_N). This results in 8 hemicord observations per mouse per brain area, which the mean is taken of for each mouse per brain area, and repeated measures ANOVA is used to compare expression differences in spinal cord, somatosensory cortex, and midbrain.
