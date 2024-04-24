@@ -1,13 +1,13 @@
 This folder contains code for locomotion analysis of experiments using systemic administration of hEsyt1
 
 #Lateral analysis.Rmd
-The lateral .Rmd file holds analysis for locomotion kinematics, with the main variables of interest being hip_ang,	knee_ang,	ankle_ang, and	foot_ang, reflecting the angle for the hip, knee, ankle and foot joints, respectively.
+The lateral locomotion analysis.Rmd file holds analysis for locomotion kinematics, with the main variables of interest being hip_ang,	knee_ang,	ankle_ang, and	foot_ang, reflecting the angle for the hip, knee, ankle and foot joints, respectively.
 For each video the mouse number and timepoint is parsed. From this information, genotype is assigned. The code contains information on which mouse numnber belongs to which genotype group.
 
 In the script, angles for the different joints are compared across wildtype, en1cre, SOD1, and SOD1en1cre animals using one-way ANOVA at postnatalday 112.
 
 #Ventral analysis.Rmd
-The Ventral analysis cleaned.Rmd fileholds analysis for gait, with the main variables being Avg.Speed,	PeakAcc., MeanCadence and MeanStride, reflecting speed, acceleration, step frequency and stride length, respectively. Mean cadence and stride  are calculated based on averaging cadence for each of the 4 legs of the mouse, and likewise for stride.
+The Ventral locomotion analysis.Rmd fileholds analysis for gait, with the main variables being Avg.Speed,	PeakAcc., MeanCadence and MeanStride, reflecting speed, acceleration, step frequency and stride length, respectively. Mean cadence and stride  are calculated based on averaging cadence for each of the 4 legs of the mouse, and likewise for stride.
 For each video the mouse number and timepoint is parsed. From this information, genotype is assigned. The code contains information on which mouse numnber belongs to which genotype group.
 
 In the script, speed, acceleration, cadence and stride are compared across wildtype, en1cre, SOD1, and SOD1en1cre animals using one-way ANOVA at postnatalday 112 and longitudinal analysis across timepoints using two-way ANOVA.
