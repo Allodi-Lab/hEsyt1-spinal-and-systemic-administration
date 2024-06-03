@@ -16,3 +16,4 @@ The Weight support algorithm.ipynp document holds the analysis pipeline for calc
 To use the .ipynb document, the step count from ventral videos must be combined with the files holding the x and y coordinates for the videos. These values are extracted using the Num_steps script.Rmd. The resulting file produced by that script can be used in the .ipymb script. The weight support ability is analyzed in WS_Analysis.Rmd at p112 using ANOVA. 
 Data on mouse number, timepoint and genotype is likewise as the other files, parsed from the file name.
 
+Mouse 627 and 625 are excluded from analysis
