@@ -1,4 +1,4 @@
-This folder contains code for locomotion analysis of experiments using systemic administration of hEsyt1
+wThis folder contains code for locomotion analysis of experiments using systemic administration of hEsyt1
 
 #Lateral analysis.Rmd
 The lateral locomotion analysis.Rmd file holds analysis for locomotion kinematics, with the main variables of interest being hip_ang,	knee_ang,	ankle_ang, and	foot_ang, reflecting the angle for the hip, knee, ankle and foot joints, respectively.
@@ -16,4 +16,4 @@ The Weight support algorithm.ipynp document holds the analysis pipeline for calc
 To use the .ipynb document, the step count from ventral videos must be combined with the files holding the x and y coordinates for the videos. These values are extracted using the Num_steps script.Rmd. The resulting file produced by that script can be used in the .ipymb script. The weight support ability is analyzed in WS_Analysis.Rmd at p112 using ANOVA. 
 Data on mouse number, timepoint and genotype is likewise as the other files, parsed from the file name.
 
-Mouse 627 and 625 are excluded from analysis
+Mouse 627 and 625 are excluded from analysis due to wrongful injection.
