@@ -43,4 +43,4 @@ where values over 0 indicate a  social novelty preference, 0 indicates no prefer
 The main variables are ID, which is used to divide mice into their respective genotypes for comparison, as well as condition (Habituation, social condition, or novelty condition). The 'Novel' conditions are what is used for calculating social novelty preference index.
 "In zone NoveltyZone cumulative s" reflect time spent in the social novelty chamber while "In zone SocialZone cumulative s" reflect time spent in familiar social chamber.
 
-Mouse 627 and 625 are excluded from analysis.
+Mouse 627 and 625 are excluded from analysis due to wrongful injection.
